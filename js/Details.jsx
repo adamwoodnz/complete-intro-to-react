@@ -1,3 +1,4 @@
+const axios = require('axios')
 const React = require('react')
 const { array, object } = React.PropTypes
 const { connector } = require('./Store')
@@ -5,15 +6,35 @@ const { connector } = require('./Store')
 const Header = require('./Header')
 
 class Details extends React.Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      show: this.props.shows.find((show) => show.imdbID === this.props.params.id),
+      omdbData: {}
+    }
+  }
+
+  componentDidMount () {
+    axios.get(`http://www.omdbapi.com/?i=${this.state.show.imdbID}`)
+      .then((response) => {
+        this.setState({omdbData: response.data})
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
   render () {
-    const { description, poster, title, trailer, year } = this.props.shows.find((show) => show.imdbID === this.props.params.id)
+    const { description, poster, title, trailer, year } = this.state.show
 
     return (
       <div className='container'>
-        <Header/>
+        <Header />
         <div className='video-info'>
           <h2 className='video-title'>{title}</h2>
           <h3 className='video-year'>({year})</h3>
+          <h3 className='video-rating'>{this.state.omdbData.imdbRating || '-'}</h3>
           <img src={`/public/img/posters/${poster}`} alt={title} className='video-poster'/>
           <p className='video-description'>{description}</p>
         </div>
