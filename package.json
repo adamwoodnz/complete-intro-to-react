@@ -8,8 +8,7 @@
     "test": "mocha --require test/helpers/setup.js",
     "build": "webpack",
     "cover": "nyc --reporter=lcov --reporter=text --reporter=html --require babel-register --extension .jsx npm test",
-    "watch": "webpack --watch",
-    "start": "webpack && http-server",
+    "start": "webpack && node server.js",
     "develop": "concurrently 'webpack --watch' 'nodemon server.js'"
   },
   "author": "Brian Holt <btholt@gmail.com>",
